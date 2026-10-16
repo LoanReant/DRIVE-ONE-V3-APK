@@ -31,4 +31,4 @@ internal class EngineSynth(private val sampleRate: Int = 22050) {
                 .coerceIn(Short.MIN_VALUE.toDouble(), Short.MAX_VALUE.toDouble()).toInt().toShort()
         }
     }
-}
+} 
