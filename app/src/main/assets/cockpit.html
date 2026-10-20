@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#050507;color:white;font-family:Arial;overflow:hidden}
+main{height:100vh;display:grid;grid-template-columns:25% 50% 25%;align-items:center;padding:2%;background:radial-gradient(ellipse,#292329 0%,#09090d 70%)}
+.side{display:flex;flex-direction:column;gap:12px;align-items:center}
+.logo{font-size:clamp(15px,2.4vw,30px);font-weight:900;letter-spacing:4px}
+.logo span{color:#e22b3e}
+.renault{font-size:clamp(28px,5vw,65px);color:#ccc;text-shadow:2px 2px 3px #000,0 0 12px #888}
+button{width:94%;padding:14px 5px;border:1px solid #a12c39;border-radius:10px;background:linear-gradient(#343139,#101015);color:#eee;font-weight:bold;font-size:clamp(10px,1.5vw,18px);box-shadow:inset 0 2px 5px #777,0 4px 8px #000}
+button:active{background:#70202d}
+button small{display:block;color:#aaa;font-size:10px;margin-top:5px}
+.center{text-align:center}
+.gauge{width:min(44vw,79vh);height:min(44vw,79vh);margin:auto;border-radius:50%;border:12px ridge #67636b;position:relative;background:repeating-conic-gradient(from -130deg,#c92a3b 0deg 1deg,transparent 1deg 10deg),radial-gradient(circle,#1e1d25 0%,#08080b 74%);box-shadow:0 0 0 5px #17151a,0 0 25px #8b1529,inset 0 0 30px black}
+.inner{position:absolute;inset:11%;border-radius:50%;background:radial-gradient(circle,#22212a,#08080d);border:2px solid #962335;box-shadow:inset 0 0 25px black}
+.needle{position:absolute;bottom:50%;left:calc(50% - 2px);width:4px;height:36%;background:#ff3049;transform-origin:bottom;transform:rotate(-130deg);transition:transform .6s;box-shadow:0 0 9px red}
+.hub{position:absolute;top:calc(50% - 9px);left:calc(50% - 9px);width:18px;height:18px;background:#d82940;border-radius:50%}
+.speed{position:absolute;top:53%;width:100%;font-size:clamp(38px,6vw,78px);font-weight:900;text-shadow:0 0 15px #b52a3b}
+.unit{position:absolute;top:76%;width:100%;font-size:12px;letter-spacing:3px;color:#aaa}
+.gps{position:absolute;top:25%;width:100%;font-size:11px;color:#e4a4ad}
+.title{font-size:clamp(12px,2vw,25px);letter-spacing:5px;font-weight:bold;margin-top:12px}
+.red{color:#ef3046}
+.info{color:#aaa;font-size:12px;text-align:center}
+</style>
+</head>
+<body>
+<main>
+<div class="side">
+<div class="renault">◇</div>
+<div class="logo">DRIVE <span>ONE</span></div>
+<button onclick="send('engine')">SPORT SOUND<small id="engine">ON</small></button>
+<button onclick="send('engine_test')">TEST MOTEUR</button>
+</div>
+<div class="center">
+<div class="gauge">
+<div class="inner"></div>
+<div class="gps" id="gps">GPS EN ATTENTE</div>
+<div class="needle" id="needle"></div>
+<div class="hub"></div>
+<div class="speed" id="speed">0</div>
+<div class="unit">KM/H</div>
+</div>
+<div class="title">DRIVE <span class="red">ONE</span></div>
+<div class="info" id="date">SPORT COCKPIT</div>
+</div>
+<div class="side">
+<div class="logo" id="clock">--:--</div>
+<button onclick="send('info')">INFOS AUTO</button>
+<button onclick="send('settings')">PARAMÈTRES</button>
+<button onclick="send('gps')">GPS<small id="gpsSide">EN ATTENTE</small></button>
+<div class="info">BATTERIE <span id="battery">--%</span></div>
+</div>
+</main>
+<script>
+function send(a){
+try{if(window.Native&&Native.action)Native.action(a)}catch(e){}
+}
+window.driveUpdate=function(d){
+if(!d)return;
+var s=Math.max(0,Math.min(240,Number(d.speed)||0));
+document.getElementById('speed').textContent=Math.round(s);
+document.getElementById('needle').style.transform='rotate('+(-130+s/240*260)+'deg)';
+document.getElementById('gps').textContent='GPS '+(d.gps||'EN ATTENTE');
+document.getElementById('gpsSide').textContent=d.gps||'EN ATTENTE';
+document.getElementById('engine').textContent=d.engine||'OFF';
+document.getElementById('clock').textContent=d.clock||'--:--';
+document.getElementById('date').textContent=d.date||'SPORT COCKPIT';
+document.getElementById('battery').textContent=d.battery||'--%';
+};
+</script>
+</body>
+</html>
